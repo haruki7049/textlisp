@@ -7,8 +7,28 @@ fn main() {
 
 struct Parser;
 
-#[derive(Default)]
-struct AbstractSyntaxTree;
+#[derive(Debug, Default, PartialEq)]
+struct AbstractSyntaxTree {
+    expr: Vec<AbstractSyntaxToken>,
+}
+
+#[derive(Debug, PartialEq)]
+enum AbstractSyntaxToken {
+    Function(Function),
+}
+
+#[derive(Debug, PartialEq)]
+enum Function {
+    IFunction(Value),
+    SFunction(Value, Value, Value),
+    KFunction(Value),
+}
+
+#[derive(Debug, PartialEq)]
+struct Value {
+    Name: String,
+    Value: Box<Value>,
+}
 
 #[derive(Debug, Default, PartialEq)]
 struct ConcreteSyntaxTree {
@@ -97,13 +117,26 @@ impl Parser {
 mod tests {
     mod parse {
         use crate::AbstractSyntaxTree;
+        use crate::AbstractSyntaxToken;
+        use crate::Function;
+        use crate::Value;
         use crate::Parser;
 
         #[test]
         fn parse() {
             let code: &str = "(i value)";
-            let _ast: AbstractSyntaxTree = Parser::parse(code);
-            todo!();
+            let ast: AbstractSyntaxTree = Parser::parse(code);
+            assert_eq!(
+                ast,
+                AbstractSyntaxTree {
+                    expr: vec![
+                        AbstractSyntaxToken::Function(Function::IFunction(Value {
+                            Name: String::from("value"),
+                            Value: Box::new(),
+                        })),
+                    ],
+                }
+            );
         }
     }
 
