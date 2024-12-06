@@ -33,8 +33,7 @@ impl Parser {
     where
         T: Into<String>,
     {
-        let program: String = t.into();
-        let token: Vec<char> = program.chars().collect();
+        let cst: ConcreteSyntaxTree = Self::tokenize(t);
 
         todo!()
     }
